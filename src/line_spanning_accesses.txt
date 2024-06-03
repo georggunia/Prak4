@@ -1,0 +1,33 @@
+Hinweise zur Simulation 
+
+Bei trace1.txt und mit folgenden Parametern sollten Sie folgendes Ergebnis bekommen;
+ -s 6 -E 1 -b 8 -t  trace1.txt
+
+hits: 1433 misses: 86 evictions: 56
+
+
+Wenn Sie das nicht bekommen, liegt das u.U an der letzten Zeile der Simulation:
+ S 040244ff,8
+
+Das produziert im verbose Modus folgendes Verhalten bei diesem letzten Store der Simulation:
+
+store 40244ff 8 hit 
+ miss 
+ eviction 
+
+Warum produziert dieser Zugriff einen hit und ein miss (mit eviction)?
+Das liegt daran, dass das erste Byte d.h. die Adresse
+040244ff = 67257599 dezimal
+In Speicherblock 
+67257599 / 256 (= Blockgrösse)  = 262724
+Während Adresse 67257600 … 67257606 (die verbleibenden 7 Byte)  in Block 262725 fallen.
+
+d.h. dieser Speicherzugriff verursacht Zugriff auf ZWEI Cache Blöcke,
+der eine hat einen hit, der andere ein Miss (mit eviction).
+
+D.h. Bei Ihrer Simulation müssen Sie immer von der Start bis Endadresse
+die Blocknummern berechnen und in welchen Cache Lines diese
+landen. Meist ist dies nur eine Cachezeile aber u.U. fällt ein
+Zugriff gerade an den Übergang zweier Cachezeilen und löst daher
+mehrere Cachezugriffe aus die natürlich simuliert werden müssen.
+

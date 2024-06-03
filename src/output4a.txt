@@ -1,0 +1,168 @@
+./simulate.sh trace1.txt
+Running cache simulation with trace file trace1.txt
+Cache lines: 16
+Block size in bytes: 16
+Associativity: 1
+Simulation starting...
+offset bits: 4 indexBits 4
+Successfully simulated 6290 valgrind lines
+Access sizes in trace: 
+16 1 2 3 4 5 6 7 8 9 10 11 
+hits: 781 misses: 739 evictions: 723
+Simulation finished.
+Running cache simulation with trace file trace1.txt
+Cache lines: 256
+Block size in bytes: 64
+Associativity: 1
+Simulation starting...
+offset bits: 6 indexBits 8
+Successfully simulated 6290 valgrind lines
+Access sizes in trace: 
+16 1 2 3 4 5 6 7 8 9 10 11 
+hits: 1326 misses: 193 evictions: 86
+Simulation finished.
+Running cache simulation with trace file trace1.txt
+Cache lines: 4096
+Block size in bytes: 256
+Associativity: 1
+Simulation starting...
+offset bits: 8 indexBits 12
+Successfully simulated 6290 valgrind lines
+Access sizes in trace: 
+16 1 2 3 4 5 6 7 8 9 10 11 
+hits: 1454 misses: 65 evictions: 16
+Simulation finished.
+Running cache simulation with trace file trace1.txt
+Cache lines: 1024
+Block size in bytes: 32
+Associativity: 1
+Simulation starting...
+offset bits: 5 indexBits 10
+Successfully simulated 6290 valgrind lines
+Access sizes in trace: 
+16 1 2 3 4 5 6 7 8 9 10 11 
+hits: 1224 misses: 295 evictions: 50
+Simulation finished.
+Running cache simulation with trace file trace1.txt
+Cache lines: 512
+Block size in bytes: 128
+Associativity: 1
+Simulation starting...
+offset bits: 7 indexBits 9
+Successfully simulated 6290 valgrind lines
+Access sizes in trace: 
+16 1 2 3 4 5 6 7 8 9 10 11 
+hits: 1417 misses: 102 evictions: 18
+Simulation finished.
+./simulate.sh trace2.txt
+Running cache simulation with trace file trace2.txt
+Cache lines: 16
+Block size in bytes: 16
+Associativity: 1
+Simulation starting...
+offset bits: 4 indexBits 4
+Successfully simulated 1723217 valgrind lines
+Access sizes in trace: 
+1 2 3 4 5 6 7 8 9 10 11 12 15 16 
+hits: 272211 misses: 208635 evictions: 208619
+Simulation finished.
+Running cache simulation with trace file trace2.txt
+Cache lines: 256
+Block size in bytes: 64
+Associativity: 1
+Simulation starting...
+offset bits: 6 indexBits 8
+Successfully simulated 1723217 valgrind lines
+Access sizes in trace: 
+1 2 3 4 5 6 7 8 9 10 11 12 15 16 
+hits: 452879 misses: 25715 evictions: 25459
+Simulation finished.
+Running cache simulation with trace file trace2.txt
+Cache lines: 4096
+Block size in bytes: 256
+Associativity: 1
+Simulation starting...
+offset bits: 8 indexBits 12
+Successfully simulated 1723217 valgrind lines
+Access sizes in trace: 
+1 2 3 4 5 6 7 8 9 10 11 12 15 16 
+hits: 476013 misses: 2331 evictions: 1119
+Simulation finished.
+Running cache simulation with trace file trace2.txt
+Cache lines: 1024
+Block size in bytes: 32
+Associativity: 1
+Simulation starting...
+offset bits: 5 indexBits 10
+Successfully simulated 1723217 valgrind lines
+Access sizes in trace: 
+1 2 3 4 5 6 7 8 9 10 11 12 15 16 
+hits: 459970 misses: 19152 evictions: 18128
+Simulation finished.
+Running cache simulation with trace file trace2.txt
+Cache lines: 512
+Block size in bytes: 128
+Associativity: 1
+Simulation starting...
+offset bits: 7 indexBits 9
+Successfully simulated 1723217 valgrind lines
+Access sizes in trace: 
+1 2 3 4 5 6 7 8 9 10 11 12 15 16 
+hits: 469471 misses: 8957 evictions: 8445
+Simulation finished.
+./simulate.sh trace3.txt
+Running cache simulation with trace file trace3.txt
+Cache lines: 16
+Block size in bytes: 16
+Associativity: 1
+Simulation starting...
+offset bits: 4 indexBits 4
+Successfully simulated 9855217 valgrind lines
+Access sizes in trace: 
+1 2 3 4 5 6 7 8 9 10 11 12 15 16 
+hits: 1473562 misses: 934172 evictions: 934156
+Simulation finished.
+Running cache simulation with trace file trace3.txt
+Cache lines: 256
+Block size in bytes: 64
+Associativity: 1
+Simulation starting...
+offset bits: 6 indexBits 8
+Successfully simulated 9855217 valgrind lines
+Access sizes in trace: 
+1 2 3 4 5 6 7 8 9 10 11 12 15 16 
+hits: 2350052 misses: 29521 evictions: 29265
+Simulation finished.
+Running cache simulation with trace file trace3.txt
+Cache lines: 4096
+Block size in bytes: 256
+Associativity: 1
+Simulation starting...
+offset bits: 8 indexBits 12
+Successfully simulated 9855217 valgrind lines
+Access sizes in trace: 
+1 2 3 4 5 6 7 8 9 10 11 12 15 16 
+hits: 2371230 misses: 1572 evictions: 594
+Simulation finished.
+Running cache simulation with trace file trace3.txt
+Cache lines: 1024
+Block size in bytes: 32
+Associativity: 1
+Simulation starting...
+offset bits: 5 indexBits 10
+Successfully simulated 9855217 valgrind lines
+Access sizes in trace: 
+1 2 3 4 5 6 7 8 9 10 11 12 15 16 
+hits: 2363924 misses: 25918 evictions: 24894
+Simulation finished.
+Running cache simulation with trace file trace3.txt
+Cache lines: 512
+Block size in bytes: 128
+Associativity: 1
+Simulation starting...
+offset bits: 7 indexBits 9
+Successfully simulated 9855217 valgrind lines
+Access sizes in trace: 
+1 2 3 4 5 6 7 8 9 10 11 12 15 16 
+hits: 2366532 misses: 8291 evictions: 7779
+Simulation finished.
