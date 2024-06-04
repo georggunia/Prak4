@@ -19,9 +19,9 @@ public class CacheSimulator {
 
     private final int[][] tags;
     private final boolean[][] validBits;
-    private final long[][] accessTimes;
 
-    CacheSimulator(int cacheLines, int associativity, int blockSize, String filename, boolean verbose, long[][] accesTimes) {
+
+    CacheSimulator(int cacheLines, int associativity, int blockSize, String filename, boolean verbose) {
         this.cacheLines = cacheLines;
         this.associativity = associativity;
         this.blockSize = blockSize;
@@ -29,7 +29,6 @@ public class CacheSimulator {
         this.valgrindParser = new ValgrindLineParser(filename);
         this.tags = new int[cacheLines][associativity];
         this.validBits = new boolean[cacheLines][associativity];
-        this.accessTimes = new long[cacheLines][associativity];
         setup();  // Do some setup stuff before
     }
 
@@ -39,7 +38,7 @@ public class CacheSimulator {
             for (int j = 0; j < associativity; j++) {
                 validBits[i][j] = false;
                 tags[i][j] = 0;
-                accessTimes[i][j] = 0;
+
             }
         }
         // Additional setup tasks
