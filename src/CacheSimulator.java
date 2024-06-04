@@ -162,7 +162,7 @@ public class CacheSimulator {
 
         System.out.println("Dumping Cache Contents:");
         for (int i = 0; i< cacheLines; i++) {
-            System.out.println("index: "+i+": ");
+            System.out.print("index: "+i+": ");
             if (validBits[i][0]){
                 System.out.println(tags[i][0]);
             }
