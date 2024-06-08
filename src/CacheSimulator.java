@@ -28,8 +28,8 @@ public class CacheSimulator {
 
         this.verbose = verbose;
         this.valgrindParser = new ValgrindLineParser(filename);
-        this.tags = new int[cacheLines][associativity];
-        this.validBits = new boolean[cacheLines][associativity];
+        this.tags = new int[this.cacheLines][associativity];
+        this.validBits = new boolean[this.cacheLines][associativity];
         setup();  // Do some setup stuff before
     }
 
