@@ -20,29 +20,30 @@ public class CacheSimulator {
     private final int[][] tags;
     private final boolean[][] validBits;
 
+
     CacheSimulator(int cacheLines, int associativity, int blockSize, String filename, boolean verbose) {
-        this.cacheLines = cacheLines;
+        this.cacheLines = 1 << cacheLines;
         this.associativity = associativity;
-        this.blockSize = blockSize;
+        this.blockSize = 1 << blockSize;
+
         this.verbose = verbose;
         this.valgrindParser = new ValgrindLineParser(filename);
-        this.tags = new int[cacheLines][associativity];
-        this.validBits = new boolean[cacheLines][associativity];
+        this.tags = new int[this.cacheLines][associativity];
+        this.validBits = new boolean[this.cacheLines][associativity];
         setup();  // Do some setup stuff before
     }
 
     private void setup() {
         // Initialize valid bits to false
         for (int i = 0; i < cacheLines; i++) {
-            for (int j = 0; j < associativity; j++) {
+            for (int j = 0; j <associativity; j++) {
                 validBits[i][j] = false;
                 tags[i][j] = 0;
+
             }
         }
         // Additional setup tasks
     }
-
-
 
 
     public void simulate() {
@@ -79,18 +80,28 @@ public class CacheSimulator {
             System.out.print(size + " ");
         }
         System.out.println("");
-        System.out.println("Hits: "+hitcounter+" Misses: "+misscounter+" Evictions: "+evictioncounter);
+        System.out.println("Hits: " + hitcounter + " Misses: " + misscounter + " Evictions: " + evictioncounter);
+        
+        if (verbose) {
+            System.out.println("Dumping Cache Contents:");
+            for (int i = 0; i < log2(cacheLines); i++) {
+                System.out.print("index " + i+": ");
+                if (validBits[i][0]) {
+                    System.out.print(tags[i][0]);
+                }
+                System.out.println("");
+            }
+        }
     }
 
     private int log2(int x) {
         int result = 0;
         while (x > 1) {
-            result ++;
+            result++;
             x = x >> 1;
         }
         return result;
     }
-
 
 
     private void simulateStore(ValgrindLineParser.ValgrindLine line, long clock) {
@@ -109,18 +120,31 @@ public class CacheSimulator {
     }
 
     public void simulateAccess(ValgrindLineParser.ValgrindLine line, long clock) {
-        int index = (int) (line.address / blockSize) % cacheLines;
-        int tag = (int) (line.address / (blockSize * cacheLines));
+
+        //   int index = (int) (line.address / blockSize) % cacheLines;
+        //   int tag = (int) line.address / (blockSize * cacheLines);
+
+        int offsetSize = log2(blockSize);
+        int indexSize = log2(cacheLines);
+        int tagSize = 32 - indexSize - offsetSize; // assuming a 32-bit address space
+
+        long address = line.address;
+        int offsetMask = (1 << offsetSize) - 1;
+        int indexMask = (1 << indexSize) - 1;
+        int offset = (int) (address & offsetMask);
+
+        int index = (int) ((address >> offsetSize) & indexMask);
+        int tag = (int) (address >> (offsetSize + indexSize));
 
         boolean cacheHit = false;
         boolean cacheFull = true; // Flag to check if the cache is full
-        int lruIndex = 0;
+
         // Check if the requested data is present in the cache (cache hit)
         for (int i = 0; i < associativity; i++) {
             if (validBits[index][i] && tags[index][i] == tag) {
                 // Cache hit
                 if (verbose) {
-                    System.out.println("hit");
+                    System.out.println(" hit");
                 }
                 // Update cache statistics if needed
                 cacheHit = true;
@@ -137,13 +161,13 @@ public class CacheSimulator {
         // If cache miss, update the cache
         if (!cacheHit) {
             if (verbose) {
-                System.out.println("miss");
+                System.out.println(" miss");
             }
             // If the cache is full, perform cache eviction
             if (cacheFull) {
                 // Perform cache eviction (replace the least recently used entry)
                 evictioncounter++;
-                if (verbose){
+                if (verbose) {
                     System.out.println("eviction");
                 }
                 // Replace the least recently used entry (or any other eviction policy)
@@ -157,18 +181,12 @@ public class CacheSimulator {
             misscounter++; // increment counter
         }
 
-        System.out.println("Dumping Cache Contents:");
-        for (int i = 0; i< cacheLines; i++) {
-            System.out.print("index: "+i+": ");
-            if (validBits[i][0]){
-                System.out.println(tags[i][0]);
-            }
-            System.out.println();
-        }
+
     }
 
 
 
-
-
 }
+    
+        
+        
