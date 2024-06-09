@@ -121,8 +121,8 @@ public class CacheSimulator {
 
     public void simulateAccess(ValgrindLineParser.ValgrindLine line, long clock) {
 
-     //   int index = (int) (line.address / blockSize) % cacheLines;
-     //   int tag = (int) line.address / (blockSize * cacheLines);
+        //   int index = (int) (line.address / blockSize) % cacheLines;
+        //   int tag = (int) line.address / (blockSize * cacheLines);
 
         int offsetSize = log2(blockSize);
         int indexSize = log2(cacheLines);
@@ -183,6 +183,8 @@ public class CacheSimulator {
 
 
     }
+
+
 
 }
     
