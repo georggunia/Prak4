@@ -54,6 +54,7 @@ Access sizes in trace:
 16 1 2 3 4 5 6 7 8 9 10 11 
 hits: 1417 misses: 102 evictions: 18
 Simulation finished.
+
 ./simulate.sh trace2.txt
 Running cache simulation with trace file trace2.txt
 Cache lines: 16
