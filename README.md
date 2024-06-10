@@ -1,6 +1,7 @@
 In src reingehen und make simulate1 ausführen (am besten in linux)
 
-Falls ein Fehler (Integer Argument expected) kommt dann dos2unix trace1.txt und dos2unix configurations.txt (ab und zu macht windows die txt files in DOS aus irgend einem Grund)
+Falls ein Fehler (Integer Argument expected) kommt dann dos2unix trace1.txt und dos2unix configurations.txt 
+(ab und zu macht windows die txt files in DOS aus irgend einem Grund)
 
 Danach wieder probieren (ggf davor make clean machen) 
 
