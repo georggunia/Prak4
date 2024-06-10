@@ -154,10 +154,10 @@ public class CacheSimulator {
                     if (verbose) {
                         System.out.println(" eviction");
                     }
-                } else {
-                    // Set the valid bit to true for the current cache entry
-                    validBits[index] = true;
                 }
+
+                // Set the valid bit to true for the current cache entry
+                validBits[index] = true;
 
                 // Replace the cache entry with the new tag
                 tags[index] = tag;
@@ -167,6 +167,8 @@ public class CacheSimulator {
             address = (address & ~offsetMask) + blockSize;
         }
     }
+
+
 
 }
 
