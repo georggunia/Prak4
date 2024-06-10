@@ -2,7 +2,7 @@ In src reingehen und make simulate1 ausführen (am besten in linux)
 ```
 make simulate1 
 ```
-Falls ein Fehler (Integer Argument expected) kommt dann müssen trace1 und configurations in das UNIX format konvertiert werden
+Falls ein Fehler (Integer Argument expected) kommt dann müssen configurations (und ggf trace1) in das UNIX format konvertiert werden
 ```
 dos2unix trace1.txt
 ``` 
