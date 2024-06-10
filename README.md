@@ -4,7 +4,7 @@ make simulate1
 ```
 Falls ein Fehler (Integer Argument expected) kommt dann müssen trace1 und configurations in das UNIX format konvertiert werden
 ```
- dos2unix trace1.txt
+dos2unix trace1.txt
 ``` 
 ```
 dos2unix configurations.txt
