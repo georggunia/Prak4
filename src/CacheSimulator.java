@@ -112,58 +112,61 @@ public class CacheSimulator {
     }
 
     public void simulateAccess(ValgrindLineParser.ValgrindLine line, long clock) {
-        int offsetSize = log2(blockSize);
-        int indexSize = log2(cacheLines);
+        int offsetSize = log2(blockSize); // Calculate number of bits for offset
+        int indexSize = log2(cacheLines); // Calculate number of bits for index
 
-        long address = line.address;
-        int offsetMask = (1 << offsetSize) - 1;
-        int indexMask = (1 << indexSize) - 1;
+        long address = line.address; // The memory address to be accessed
+        long endAddress = address + line.size - 1; // Calculate the end address of the memory access
 
-        int offset = (int) (address & offsetMask);
-        int index = (int) ((address >> offsetSize) & indexMask);
-        int tag = (int) (address >> (offsetSize + indexSize));
+        while (address <= endAddress) {
+            int offsetMask = (1 << offsetSize) - 1; // Mask to extract the offset
+            int indexMask = (1 << indexSize) - 1; // Mask to extract the index
 
-        boolean cacheHit = false;
+            int offset = (int) (address & offsetMask); // Extract the offset
+            int index = (int) ((address >> offsetSize) & indexMask); // Extract the index
+            int tag = (int) (address >> (offsetSize + indexSize)); // Extract the tag
 
-        // Check if the requested data is present in the cache (cache hit)
-        if (validBits[index] && tags[index] == tag) {
-            // Cache hit
-            if (verbose) {
-                System.out.println(" hit");
-            }
-            // Update cache statistics
-            cacheHit = true;
-            hitcounter++;
-        }
+            boolean cacheHit = false; // Flag to check if the access is a hit
 
-        // If cache miss, update the cache
-        if (!cacheHit) {
-            if (verbose) {
-                System.out.println(" miss");
-            }
-
-            // Cache miss
-            misscounter++;
-
-            // If the cache is full, perform cache eviction
-            if (validBits[index]) {
-                evictioncounter++;
+            // Check if the requested data is present in the cache (cache hit)
+            if (validBits[index] && tags[index] == tag) {
+                // Cache hit
                 if (verbose) {
-                    System.out.println(" eviction");
+                    System.out.println(" hit");
                 }
-            } else {
-                // Set the valid bit to true for the current cache entry
-                validBits[index] = true;
+                // Update cache statistics
+                cacheHit = true;
+                hitcounter++;
             }
 
-            // Replace the cache entry with the new tag
-            tags[index] = tag;
+            // If cache miss, update the cache
+            if (!cacheHit) {
+                if (verbose) {
+                    System.out.println(" miss");
+                }
+
+                // Cache miss
+                misscounter++;
+
+                // If the cache is full, perform cache eviction
+                if (validBits[index]) {
+                    evictioncounter++;
+                    if (verbose) {
+                        System.out.println(" eviction");
+                    }
+                } else {
+                    // Set the valid bit to true for the current cache entry
+                    validBits[index] = true;
+                }
+
+                // Replace the cache entry with the new tag
+                tags[index] = tag;
+            }
+
+            // Move to the next block if the address spans multiple blocks
+            address = (address & ~offsetMask) + blockSize;
         }
     }
-
-
-
-
 
 }
 
