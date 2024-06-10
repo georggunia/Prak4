@@ -1,8 +1,3 @@
-/**
- * @author mock
- * v 1.0
- * SoSe 2020
- */
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,8 +12,8 @@ public class CacheSimulator {
     private final boolean verbose;
     private final ValgrindLineParser valgrindParser;
 
-    private final int[][] tags;
-    private final boolean[][] validBits;
+    private final int[] tags;
+    private final boolean[] validBits;
 
 
     CacheSimulator(int cacheLines, int associativity, int blockSize, String filename, boolean verbose) {
@@ -28,19 +23,16 @@ public class CacheSimulator {
 
         this.verbose = verbose;
         this.valgrindParser = new ValgrindLineParser(filename);
-        this.tags = new int[this.cacheLines][associativity];
-        this.validBits = new boolean[this.cacheLines][associativity];
+        this.tags = new int[this.cacheLines];
+        this.validBits = new boolean[this.cacheLines];
         setup();  // Do some setup stuff before
     }
 
     private void setup() {
         // Initialize valid bits to false
-        for (int i = 0; i < cacheLines; i++) {
-            for (int j = 0; j <associativity; j++) {
-                validBits[i][j] = false;
-                tags[i][j] = 0;
-
-            }
+        for (int i = 0; i < this.cacheLines; i++) {
+                validBits[i] = false;
+                tags[i]= 0;
         }
         // Additional setup tasks
     }
@@ -51,7 +43,7 @@ public class CacheSimulator {
         Set<Integer> sizes = new HashSet<Integer>();
 
         while ((line = valgrindParser.getNext()) != null) {
-            long clock = valgrindParser.getLineNumber();  // we use the line number as a logical clock 
+            long clock = valgrindParser.getLineNumber();  // we use the line number as a logical clock
             sizes.add(line.size);
             switch (line.accessKind) {
                 case 'L':
@@ -81,13 +73,13 @@ public class CacheSimulator {
         }
         System.out.println("");
         System.out.println("Hits: " + hitcounter + " Misses: " + misscounter + " Evictions: " + evictioncounter);
-        
+
         if (verbose) {
             System.out.println("Dumping Cache Contents:");
             for (int i = 0; i < log2(cacheLines); i++) {
                 System.out.print("index " + i+": ");
-                if (validBits[i][0]) {
-                    System.out.print(tags[i][0]);
+                if (validBits[i]) {
+                    System.out.print(tags[i]);
                 }
                 System.out.println("");
             }
@@ -120,42 +112,28 @@ public class CacheSimulator {
     }
 
     public void simulateAccess(ValgrindLineParser.ValgrindLine line, long clock) {
-
-        //   int index = (int) (line.address / blockSize) % cacheLines;
-        //   int tag = (int) line.address / (blockSize * cacheLines);
-
         int offsetSize = log2(blockSize);
         int indexSize = log2(cacheLines);
-        int tagSize = 32 - indexSize - offsetSize; // assuming a 32-bit address space
 
         long address = line.address;
         int offsetMask = (1 << offsetSize) - 1;
         int indexMask = (1 << indexSize) - 1;
-        int offset = (int) (address & offsetMask);
 
+        int offset = (int) (address & offsetMask);
         int index = (int) ((address >> offsetSize) & indexMask);
         int tag = (int) (address >> (offsetSize + indexSize));
 
         boolean cacheHit = false;
-        boolean cacheFull = true; // Flag to check if the cache is full
 
         // Check if the requested data is present in the cache (cache hit)
-        for (int i = 0; i < associativity; i++) {
-            if (validBits[index][i] && tags[index][i] == tag) {
-                // Cache hit
-                if (verbose) {
-                    System.out.println(" hit");
-                }
-                // Update cache statistics if needed
-                cacheHit = true;
-                hitcounter++;
-                // Example: Update cache access time
-                // cacheAccessTime[index][i] = clock;
-                break;
+        if (validBits[index] && tags[index] == tag) {
+            // Cache hit
+            if (verbose) {
+                System.out.println(" hit");
             }
-            if (validBits[index][i] == false) {
-                cacheFull = false;
-            }
+            // Update cache statistics
+            cacheHit = true;
+            hitcounter++;
         }
 
         // If cache miss, update the cache
@@ -163,30 +141,31 @@ public class CacheSimulator {
             if (verbose) {
                 System.out.println(" miss");
             }
+
+            // Cache miss
+            misscounter++;
+
             // If the cache is full, perform cache eviction
-            if (cacheFull) {
-                // Perform cache eviction (replace the least recently used entry)
+            if (validBits[index]) {
                 evictioncounter++;
                 if (verbose) {
-                    System.out.println("eviction");
+                    System.out.println(" eviction");
                 }
-                // Replace the least recently used entry (or any other eviction policy)
-                // Example: Update cache eviction policy
-                // implementEvictionPolicy(index);
+            } else {
+                // Set the valid bit to true for the current cache entry
+                validBits[index] = true;
             }
-            // Replace the cache entry with the new tag and set the valid bit
-            tags[index][0] = tag;
-            validBits[index][0] = true;
-            // Example: Update cache miss counter
-            misscounter++; // increment counter
+
+            // Replace the cache entry with the new tag
+            tags[index] = tag;
         }
-
-
     }
 
 
 
+
+
 }
-    
-        
-        
+
+
+
