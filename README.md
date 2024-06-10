@@ -4,11 +4,11 @@ make simulate1
 ```
 Falls ein Fehler (Integer Argument expected) kommt dann müssen configurations (und ggf trace1) in das UNIX format konvertiert werden
 ```
-dos2unix trace1.txt
-``` 
-```
 dos2unix configurations.txt
 ```
+```
+dos2unix trace1.txt
+``` 
 (ab und zu macht windows die txt files in DOS aus irgend einem Grund)
 
 Danach wieder probieren (ggf davor make clean machen)
