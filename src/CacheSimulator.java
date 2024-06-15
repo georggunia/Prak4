@@ -1,6 +1,6 @@
 import java.util.HashSet;
 import java.util.Set;
-
+//ENDLICH
 public class CacheSimulator {
 
     private final int cacheLines; // Anzahl der Cachezeilen
