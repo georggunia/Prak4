@@ -1,30 +1,29 @@
 import java.util.HashSet;
 import java.util.Set;
-//ENDLICH
+
 public class CacheSimulator {
 
-    private final int cacheLines; // Anzahl der Cachezeilen
-    private final int associativity; // Assoziativität (hier nicht verwendet, da direkter Abbildcache)
-    private final int blockSize; // Größe eines Cacheblocks
-    private final String filename; // Name der Datei mit den Speicherzugriffen
-    private final boolean verbose; // Verbose-Modus für ausführliche Ausgaben
-    private final ValgrindLineParser valgrindParser; // Parser für Valgrind-Ausgaben
-
-    // Klasse zur Darstellung einer Cachezeile (mit Gültigkeitsbit und Tag)
+    private final int cacheLines; // Number of cache lines
+    private final int associativity; // Associativity (not used here because of direct image cache)
+    private final int blockSize; // Size of a cache block
+    private final String filename; // Name of the file with the memory accesses
+    private final boolean verbose; // Verbose mode for verbose output
+    private final ValgrindLineParser valgrindParser; // Parser for Valgrind output
+    // Class for representing a cache line (with validity bit and tag)
     private class CacheLine {
-        boolean valid; // Gültigkeitsbit
-        long tag; // Tag des Cacheblocks
+        long tag; // Day of the cache block
+        boolean valid; // Validity bit
 
         CacheLine() {
-            valid = false; // Initiale Gültigkeit auf false setzen
-            tag = -1; // Initialer Tag-Wert
+            valid = false; // Set initial validity to false
+            day = -1; // Initial tag value
         }
     }
 
-    private CacheLine[] cache; // Array zur Darstellung des Caches
-    private int hits = 0; // Zähler für Cache-Hits
-    private int misses = 0; // Zähler für Cache-Misses
-    private int evictions = 0; // Zähler für Cache-Evictions
+    private CacheLine[] cache; // Array to represent the cache
+    private int hits = 0; // Cache hit counter
+    private int misses = 0; // Cache miss counter
+    private int evictions = 0; // Counter for cache evictions
 
     CacheSimulator(int cacheLines, int associativity, int blockSize, String filename, boolean verbose) {
         this.cacheLines = cacheLines;
@@ -32,54 +31,58 @@ public class CacheSimulator {
         this.blockSize = blockSize;
         this.filename = filename;
         this.verbose = verbose;
-        valgrindParser = new ValgrindLineParser(filename); // Initialisiere den Valgrind-Parser
-        setup(); // Initialisiere den Cache
+        valgrindParser = new ValgrindLineParser(filename); // Initialize the Valgrind parser
+        set up(); // Initialize the cache
     }
 
     private void setup() {
-        cache = new CacheLine[cacheLines]; // Erstelle ein Array von Cachezeilen
+        cache = new CacheLine[cacheLines]; // Create an array of cache lines
         for (int i = 0; i < cacheLines; i++) {
-            cache[i] = new CacheLine(); // Initialisiere jede Cachezeile
+            cache[i] = new CacheLine(); // Initialize each cache line
         }
     }
 
     public void simulate() {
-        ValgrindLineParser.ValgrindLine line = null;
-        Set<Integer> sizes = new HashSet<Integer>(); // Set zur Speicherung unterschiedlicher Zugriffgrößen
+    ValgrindLineParser.ValgrindLine line = null;
+    Set<Integer> sizes = new HashSet<Integer>(); // Set to store different access sizes
 
-        while ((line = valgrindParser.getNext()) != null) { // Lese Zeilen aus der Valgrind-Datei
-            long clock = valgrindParser.getLineNumber(); // Benutze die Zeilennummer als logische Uhr
-            sizes.add(line.size); // Füge die Zugriffgröße zum Set hinzu
+        while ((line = valgrindParser.getNext()) != null) { // Read lines from the Valgrind file
+            long clock = valgrindParser.getLineNumber(); // Use the line number as a logical clock
+            sizes.add(line.size); // Add the access size to the set
             switch (line.accessKind) {
                 case 'L':
-                    simulateLoad(line, clock); // Simuliere einen Lesezugriff
+                    simulateLoad(line, clock); // Simulate read access
                     break;
                 case 'M':
-                    simulateLoad(line, clock); // Simuliere einen Lesezugriff
-                    simulateStore(line, clock); // Simuliere einen Schreibzugriff
+                    simulateLoad(line, clock); // Simulate read access
+                    simulateStore(line, clock); // Simulate write access
                     break;
                 case 'S':
-                    simulateStore(line, clock); // Simuliere einen Schreibzugriff
+                    simulateStore(line, clock); // Simulate write access
                     break;
                 case 'I':
-                    // Nichts zu tun für den D-Cache
+                    // Nothing to do for the D cache
                     break;
                 default:
-                    // Sollte nicht passieren
+                    // Shouldn't happen
                     System.out.println("Don't know how to simulate access kind " + line.accessKind);
                     break;
             }
         }
+
         System.out.println("Successfully simulated " + valgrindParser.getLineNumber() + " valgrind lines");
         System.out.println("Access sizes in trace: ");
+
         for (int size : sizes) {
-            System.out.print(size + " "); // Gebe alle unterschiedlichen Zugriffgrößen aus
+            System.out.print(size + " "); // Output all different access sizes
         }
+
         System.out.println("");
-        // Gebe die Gesamtstatistik aus
+
+        // Output the overall statistics
         System.out.println("hits: " + hits + " misses: " + misses + " evictions: " + evictions);
 
-        // Gebe den Inhalt des Caches aus, wenn der verbose-Modus aktiviert ist
+        // Output the contents of the cache when verbose mode is enabled
         if (verbose) {
             System.out.println("Dumping cache contents: ");
             for (int i = 0; i < cache.length; i++) {
@@ -90,71 +93,71 @@ public class CacheSimulator {
                 }
             }
         }
+
     }
 
     private int log2(int x) {
         int result = 0;
-        while (x > 1) { // Bestimme den Logarithmus zur Basis 2
+        while (x > 1) {
             result++;
-            x = x >> 1; // Rechne x = x / 2
+            x = x >> 1;
         }
         return result;
     }
 
-    private void simulateStore(ValgrindLineParser.ValgrindLine line, long clock) {
+   private void simulateStore(ValgrindLineParser.ValgrindLine line, long clock) {
         if (verbose) {
             System.out.print("store " + Long.toString(line.address, 16) + " " + line.size);
         }
-        simulateAccess(line, clock); // Simuliere den Speicherzugriff
+        simulateAccess(line, clock) // Simulate the memory access
     }
 
     private void simulateLoad(ValgrindLineParser.ValgrindLine line, long clock) {
         if (verbose) {
             System.out.print("load " + Long.toString(line.address, 16) + " " + line.size);
         }
-        simulateAccess(line, clock); // Simuliere den Speicherzugriff
+        simulateAccess(line, clock); // Simulate memory access
     }
 
     private void simulateAccess(ValgrindLineParser.ValgrindLine line, long clock) {
-        int blockOffsetBits = log2(blockSize); // Anzahl der Bits für den Blockoffset
-        int indexBits = log2(cacheLines); // Anzahl der Bits für den Cacheindex
+        int blockOffsetBits = log2(blockSize); // Number of bits for the block offset
+        int indexBits = log2(cacheLines); // Number of bits for the cache index
 
-        long address = line.address; // Die Speicheradresse des Zugriffs
-        long endAddress = line.address + line.size - 1; // Die Endadresse des Zugriffs
+        long address = line.address; // The memory address of the access
+        long endAddress = line.address + line.size - 1; // The end address of the access
 
-        int startBlock = (int) (address / blockSize); // Berechne den Startblock
-        int endBlock = (int) (endAddress / blockSize); // Berechne den Endblock
+        int startBlock = (int)(address/blockSize); // Calculate the starting block
+        int endBlock = (int)(endAddress/blockSize); // Calculate the end block
 
-        for (int block = startBlock; block <= endBlock; block++) { // Iteriere über alle betroffenen Blöcke
-            long blockAddress = block * blockSize; // Berechne die Blockadresse
+        for (int block = startBlock; block <= endBlock; block++) { // Iterate over all affected blocks
+            long blockAddress = block * blockSize; // Calculate the block address
             // int blockOffset = (int) (blockAddress & ((1 << blockOffsetBits) - 1)); //
-            // Berechne den BlockOffset (keine weitere Verwendung hier)
-            int index = (int) ((blockAddress >> blockOffsetBits) & ((1 << indexBits) - 1)); // Berechne den Cacheindex
-            long tag = blockAddress >> (blockOffsetBits + indexBits); // Berechne den Tag
+            // Calculate the BlockOffset (no further use here)
+            int index = (int) ((blockAddress >> blockOffsetBits) & ((1 << indexBits) - 1)); // Calculate the cache index
+            long tag = blockAddress >> (blockOffsetBits + indexBits); // Calculate the day
 
-            CacheLine cacheLine = cache[index]; // Hole die Cachezeile mit dem berechneten Index
-            boolean hit = cacheLine.valid && cacheLine.tag == tag; // Prüfe, ob die Cachezeile gültig ist und ob der Tag
-            // übereinstimmt
-            if (hit) {
-                if (verbose)
-                    System.out.println(" hit"); // Wenn es ein Hit ist,
-                hits++; // Erhöhe die Hit-Zahl
+            CacheLine cacheLine = cache[index]; // Get the cache line with the calculated index
+            boolean hit = cacheLine.valid && cacheLine.tag == tag; // Check whether the cache line is valid and whether the tag matches        if (hit) {
+
+            if (verbose)
+                    System.out.println(" hit"); // If it's a hit,
+                hits++; // Increase the number of hits
             } else {
                 if (verbose)
-                    System.out.println(" miss"); // Wenn es ein Miss ist,
-                misses++; // Erhöhe die Miss-Zahl
+                    System.out.println(" miss"); // If it's a miss,
+                misses++; // Increase the miss number
                 if (cacheLine.valid) {
                     if (verbose)
-                        System.out.println(" eviction"); // Wenn die Cachezeile gültig ist,
-                    evictions++; // Erhöhe die Eviction-Zahl
+                        System.out.println(" eviction"); // If the cache line is valid,
+                    evictions++; // Increase the eviction number
                 }
-                cacheLine.valid = true; // Setze die Cachezeile auf gültig
-                cacheLine.tag = tag; // Setze den Tag der Cachezeile
+                cacheLine.valid = true; // Set the cache line to valid
+                cacheLine.tag = tag; // Set the cache line tag
                 if (verbose)
-                    System.out.println("updating index " + index + " with tag: " + tag); // Ausgeben
+                    System.out.println("updating index " + index + " with tag: " + tag); // Spend
             }
             if (verbose)
-                System.out.println(); // neue Zeile printen
+                System.out.println(); // new line
         }
     }
 }
