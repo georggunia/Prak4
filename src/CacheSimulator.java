@@ -32,7 +32,7 @@ public class CacheSimulator {
         this.filename = filename;
         this.verbose = verbose;
         valgrindParser = new ValgrindLineParser(filename); // Initialize the Valgrind parser
-        set up(); // Initialize the cache
+        setup(); // Initialize the cache
     }
 
     private void setup() {
@@ -120,8 +120,8 @@ public class CacheSimulator {
     }
 
     private void simulateAccess(ValgrindLineParser.ValgrindLine line, long clock) {
-        int blockOffsetBits = log2(blockSize); // Number of bits for the block offset
         int indexBits = log2(cacheLines); // Number of bits for the cache index
+        int blockOffsetBits = log2(blockSize); // Number of bits for the block offset
 
         long address = line.address; // The memory address of the access
         long endAddress = line.address + line.size - 1; // The end address of the access
@@ -131,16 +131,14 @@ public class CacheSimulator {
 
         for (int block = startBlock; block <= endBlock; block++) { // Iterate over all affected blocks
             long blockAddress = block * blockSize; // Calculate the block address
-            // int blockOffset = (int) (blockAddress & ((1 << blockOffsetBits) - 1)); //
-            // Calculate the BlockOffset (no further use here)
             int index = (int) ((blockAddress >> blockOffsetBits) & ((1 << indexBits) - 1)); // Calculate the cache index
-            long tag = blockAddress >> (blockOffsetBits + indexBits); // Calculate the day
+            long tag = blockAddress >> (blockOffsetBits + indexBits); // Calculate the tag
 
             CacheLine cacheLine = cache[index]; // Get the cache line with the calculated index
-            boolean hit = cacheLine.valid && cacheLine.tag == tag; // Check whether the cache line is valid and whether the tag matches        if (hit) {
-
-            if (verbose)
-                    System.out.println(" hit"); // If it's a hit,
+            boolean hit = cacheLine.valid && cacheLine.tag == tag; // Check whether the cache line is valid and whether the tag matches
+            if (hit) {
+                if (verbose)
+                        System.out.println(" hit"); // If it's a hit,
                 hits++; // Increase the number of hits
             } else {
                 if (verbose)
@@ -156,8 +154,8 @@ public class CacheSimulator {
                 if (verbose)
                     System.out.println("updating index " + index + " with tag: " + tag); // Spend
             }
-            if (verbose)
-                System.out.println(); // new line
+                if (verbose)
+                    System.out.println(); // new line
         }
     }
 }
