@@ -1,22 +1,27 @@
-In src reingehen und make simulate1 ausführen (am besten in linux)
+Enter src and decompress trace2.txt and trace3.txt
 ```
-make simulate1 
+gzip -d filename.gz
 ```
-Falls ein Fehler (Integer Argument expected) kommt dann müssen configurations (und ggf trace1) in das UNIX format konvertiert werden
+After that, run make simulateall to simulate all traces (or make simulate1 to simulate only trace1)
+```
+make simulateall
+```
+```
+make simulate1
+```
+If thers any Error message (Integer Argument expected) then you need to convert configurations (and maybe the traces) to the UNIX format 
 ```
 dos2unix configurations.txt
 ```
 ```
 dos2unix trace1.txt
 ``` 
-(ab und zu macht windows die txt files in DOS aus irgend einem Grund)
-
-Danach wieder probieren (ggf davor make clean machen)
+(sometimes windows or wsl convert the files to a DOS format thats why that happens=
+After that try again (maybe run make clean beforehand)
 ```
 make clean
-``` 
+```
+Correct Output for simualateall is in output4a
+I.e output for trace1 is in [output4a](https://github.com/georggunia/Prak4/blob/14a488ef239859f1c1d40ba08db6552d93fb065c/src/output4a.txt#L1-L56) (till line 57) 
 
-Der korrekte output für trace1 ist in [output4a](https://github.com/georggunia/Prak4/blob/14a488ef239859f1c1d40ba08db6552d93fb065c/src/output4a.txt#L1-L56) (also BIS zur zeile 57) 
-
-Leider ist der echte output weit entfernt vom korrektem und ich weiß nicht warum
 
