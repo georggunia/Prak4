@@ -43,8 +43,8 @@ public class CacheSimulator {
     }
 
     public void simulate() {
-    ValgrindLineParser.ValgrindLine line = null;
-    Set<Integer> sizes = new HashSet<Integer>(); // Set to store different access sizes
+        ValgrindLineParser.ValgrindLine line = null;
+        Set<Integer> sizes = new HashSet<Integer>(); // Set to store different access sizes
 
         while ((line = valgrindParser.getNext()) != null) { // Read lines from the Valgrind file
             long clock = valgrindParser.getLineNumber(); // Use the line number as a logical clock
